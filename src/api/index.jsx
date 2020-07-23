@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from 'components/Login';
 
-const DASHBOARD_URL = process.env.NODE_ENV == 'development' ? 'http://localhost:3001' : 'https://dashboard-backend.qz.ai';
+const DASHBOARD_URL = process.env.NODE_ENV == 'development' ? 'http://localhost:3001' : 'https://dashboard-backend.ad-observatory.com';
 
 const AuthContext = React.createContext();
 
@@ -64,7 +64,7 @@ class API extends React.Component {
 
 	search = ( params = {} ) => {
 		const { poliprobMin = 70, poliprobMax = 100 } = params;
-		const parsedParams = Object.keys( params ).map( param => `${param}=${params[param].join( ',' )}` ).join( '&' );
+		const parsedParams = Object.keys( params ).map( param => `${param}=${params[param].map((p) => encodeURIComponent(p)).join( ',' )}` ).join( '&' );
 		return this.get( `${this.baseURL}/ads/search.json?${parsedParams}&poliprob=[${poliprobMin},${poliprobMax}]` );
 	}
 
