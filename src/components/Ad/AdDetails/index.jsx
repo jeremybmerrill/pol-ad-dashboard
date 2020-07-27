@@ -46,7 +46,8 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 		text_hash,
 		ad_creative_link_caption,
 		ad_creative_link_title,
-		ad_creative_link_description
+		ad_creative_link_description,
+		id
 	} = creativeAd;
 
 	const createdAt = new Date( created_at );
@@ -100,6 +101,10 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 			</Modal>
 */}	
 			<Link to={'/ad/' + text_hash }>Ad Details</Link>
+			{
+				html ? <span> • <a href={ "https://www.facebook.com/ads/library/?id=" + (id) }>FB ad library</a></span> : null
+			}
+          	
 			</div>
 		</div>
 	);
