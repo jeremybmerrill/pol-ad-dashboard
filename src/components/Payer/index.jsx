@@ -48,6 +48,7 @@ const Payer = ( { getPayerByName } ) => {
     precise_spend,
     topics,
     targetings,
+    notes
   } = payerData;
 
   return (
@@ -58,6 +59,7 @@ const Payer = ( { getPayerByName } ) => {
           <div>{precise_spend ? `$${precise_spend.toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, '$1,' )} spent` : 'Unknown spend'}</div>
           <div>{ads || 0} Facebook API ads</div>
           <div>{fbpac_ads || 0} FBPAC ads</div>
+          <div>{notes}</div>
         </div>
         <div className={cx( 'adv-section', 'topics' )}>
           <h4>Topic Coverage</h4>
