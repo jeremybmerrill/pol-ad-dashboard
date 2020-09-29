@@ -74,13 +74,13 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 					) : null
 			}
 			<p className={cx( 'sub' )}>
-				<span>First seen: {`${createdAt.toLocaleDateString( 'en-US', { dateStyle: 'full', timeStyle: 'long' } )}`}</span>
+				<span>First seen: {`${createdAt.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
 			</p>
 			{
 				updated_at
 					? (
 						<p className={cx( 'sub' )}>
-							<span>Last updated: {`${updatedAt.toLocaleDateString( 'en-US', { dateStyle: 'full', timeStyle: 'long' } )}`}</span>
+							<span>Last updated: {`${updatedAt.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
 						</p>
 					) : null
 			}
