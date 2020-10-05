@@ -4,11 +4,19 @@ import AdDetails, { CreativeAd } from './AdDetails';
 import classnames from 'classnames/bind';
 import Targets from '../Targets';
 import styles from './Ad.module.css';
+import { makeAdHtml  } from './utilities'
 // Facebook-ad specific styling
 // eslint-disable-next-line
 import './fb_ad.scss';
 
 const cx = classnames.bind( styles );
+
+const isPost2020 = (html) => {
+	return true;
+}
+const post2020HtmlToFakeHtml = (html) => {
+	return '<div class="ati-item ' + cx('ati-item') + '">' + makeAdHtml(html, cx) + '</div>'
+}
 
 const Ad = ( { ad, creativeAd, text } ) => {
 	const {
@@ -23,7 +31,7 @@ const Ad = ( { ad, creativeAd, text } ) => {
 
 	return (
 		<div className={cx( 'container' )}>
-			<CreativeAd html={html} />
+			<CreativeAd html={isPost2020(html) ? post2020HtmlToFakeHtml(html) : html} />
 			{
 				targetings && targetings[0] && targetings[0][0] === '<' // cleanup since sometimes an ad target isn't html
 					? (

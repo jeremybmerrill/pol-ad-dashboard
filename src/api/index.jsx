@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from 'components/Login';
 
-const DASHBOARD_URL = process.env.NODE_ENV == 'development' ? 'http://localhost:3001' : 'https://dashboard-backend.ad-observatory.com';
+const DASHBOARD_URL = process.env.NODE_ENV == 'development' ? 'http://localhost:5000' : 'https://dashboard-backend.ad-observatory.com';
 
 const AuthContext = React.createContext();
 
@@ -50,22 +50,22 @@ class API extends React.Component {
 		return data;
 	}
 
-	getAd = ( adId ) => this.get( `${this.baseURL}/ads_by_text/${adId}` );
+	getAd = ( adId ) => this.get( `${this.baseURL}/aoapi/ads_by_text/${adId}` );
 
-	getAdvertiserByName = ( name ) => this.get( `${this.baseURL}/pages_by_name/${encodeURIComponent( name )}.json` );
+	getAdvertiserByName = ( name ) => this.get( `${this.baseURL}/aoapi/pages_by_name/${encodeURIComponent( name )}.json` );
 
-	getPayerByName = ( name ) => this.get( `${this.baseURL}/payers_by_name/${encodeURIComponent( name )}.json` );
+	getPayerByName = ( name ) => this.get( `${this.baseURL}/aoapi/payers_by_name/${encodeURIComponent( name )}.json` );
 
-	getAdByTextHash = ( text_hash ) => this.get( `${this.baseURL}/ads_by_text/${encodeURIComponent( text_hash )}.json` );
+	getAdByTextHash = ( text_hash ) => this.get( `${this.baseURL}/aoapi/ads_by_text/${encodeURIComponent( text_hash )}.json` );
 
-	getTopics = () => this.get( `${this.baseURL}/topics.json` );
+	getTopics = () => this.get( `${this.baseURL}/aoapi/topics.json` );
 
 	handleChange = ( key ) => ( _, { value } ) => this.setState( { [key]: value } );
 
 	search = ( params = {} ) => {
 		const { poliprobMin = 70, poliprobMax = 100 } = params;
 		const parsedParams = Object.keys( params ).map( param => `${param}=${params[param].map((p) => encodeURIComponent(p)).join( ',' )}` ).join( '&' );
-		return this.get( `${this.baseURL}/ads/search.json?${parsedParams}&poliprob=[${poliprobMin},${poliprobMax}]` );
+		return this.get( `${this.baseURL}/aoapi/ads/search.json?${parsedParams}&poliprob=[${poliprobMin},${poliprobMax}]` );
 	}
 
 	render() {

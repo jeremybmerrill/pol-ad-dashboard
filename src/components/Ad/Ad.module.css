@@ -2,5 +2,33 @@
 	display: inline-block;
 	vertical-align: top;
 	margin: 6px;
-	box-shadow: -3px 6px 14px 0px rgba(0,0,0,0.1)
+	box-shadow: -3px 6px 14px 0px rgba(0,0,0,0.1);
 }
+
+.ati-item {
+    max-width: 500px;
+    padding: 0 12px;
+}
+
+.ati-item a, .ati-item .ati-item-ad-sponsored{
+    color: #365899;
+}
+
+.ati-item .ati-item-advertiser{
+    font-weight: bold;
+}
+
+.ati-item .ati-item-advertiser-thumb {
+    float:left;
+    margin-right: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.ati-item-ad-copy {
+    clear: both;
+}
+/*.ati-item-cta img {
+    display: none;
+}*/

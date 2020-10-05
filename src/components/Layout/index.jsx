@@ -47,7 +47,7 @@ const Layout = ( {
 } ) => (
 	<div className={cx( 'layout' )}>
 		<div className={cx( 'left-rail' )}>
-			<h1>Quartz FB ads dashboard</h1>
+			<h1>Ad Observer dashboard</h1>
 			{
 				pathname === '/search' && (
 					<Fragment>
