@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
+
 import AdDetails, { CreativeAd } from './AdDetails';
 import classnames from 'classnames/bind';
 import Targets from '../Targets';
@@ -15,7 +17,7 @@ const isPost2020 = (html) => {
 	return true;
 }
 const post2020HtmlToFakeHtml = (html) => {
-	return '<div class="ati-item ' + cx('ati-item') + '">' + makeAdHtml(html, cx) + '</div>'
+	return '<div class="ati-item ' + cx('ati-item') + '">' + DOMPurify.sanitize(makeAdHtml(html, cx)) + '</div>'
 }
 
 const Ad = ( { ad, creativeAd, text } ) => {

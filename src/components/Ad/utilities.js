@@ -82,10 +82,12 @@ const getAdSponsorLine = (doc, cx) => {
   var els = doc.querySelectorAll('div[data-testid="story-subtitle"]');
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
-
     if((el.innerText.indexOf('Paid for by') > -1) && (el.innerText.indexOf('Sponsored') > -1)){
       html_texts.push(el.innerText); // political
+    }else if (el.innerText.indexOf('·') > -1) {
+      html_texts.push(el.innerText); // non-political
     }
+
 
   }
   return '<div class="'+cx('ati-item-ad-sponsored')+'">' +  html_texts.join('<br />') + "</div>";
