@@ -38,10 +38,10 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 	const { currency } = ad ? ad.ads.find( subAd => !subAd.id ) : { currency: 'USD' }; // find the FBPAC version of the ad which contains more price data
 	const {
 		advertiser,
-		created_at,
+		observed_at_min,
 		impressions,
 		paid_for_by,
-		updated_at,
+		observed_at_max,
 		html,
 		text_hash,
 		ad_creative_link_caption,
@@ -50,8 +50,8 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 		id
 	} = creativeAd;
 
-	const createdAt = new Date( created_at );
-	const updatedAt = new Date( updated_at );
+	const observedAtMin = new Date( observed_at_min );
+	const observedAtMax = new Date( observed_at_max );
 
 	return (
 		<div
@@ -74,13 +74,13 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 					) : null
 			}
 			<p className={cx( 'sub' )}>
-				<span>First seen: {`${createdAt.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
+				<span>First seen: {`${observedAtMin.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
 			</p>
 			{
-				updated_at
+				observedAtMax
 					? (
 						<p className={cx( 'sub' )}>
-							<span>Last updated: {`${updatedAt.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
+							<span>Last seen: {`${observedAtMax.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
 						</p>
 					) : null
 			}

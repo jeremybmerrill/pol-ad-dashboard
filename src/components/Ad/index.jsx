@@ -4,9 +4,9 @@ import DOMPurify from 'dompurify';
 
 import AdDetails, { CreativeAd } from './AdDetails';
 import classnames from 'classnames/bind';
-import Targets from '../Targets';
+import {AdTargeting} from '../Targets';
 import styles from './Ad.module.css';
-import { makeAdHtml  } from './utilities'
+import makeAdHtml  from './utilities'
 // Facebook-ad specific styling
 // eslint-disable-next-line
 import './fb_ad.scss';
@@ -16,8 +16,8 @@ const cx = classnames.bind( styles );
 const isPost2020 = (html) => {
 	return true;
 }
-const post2020HtmlToFakeHtml = (html) => {
-	return '<div class="ati-item ' + cx('ati-item') + '">' + DOMPurify.sanitize(makeAdHtml(html, cx)) + '</div>'
+const post2020HtmlToFakeHtml = (html, images, thumbnail) => {
+	return '<div class="ati-item ' + cx('ati-item') + '">' + DOMPurify.sanitize(makeAdHtml(html, images, thumbnail, cx)) + '</div>'
 }
 
 const Ad = ( { ad, creativeAd, text } ) => {
@@ -25,6 +25,7 @@ const Ad = ( { ad, creativeAd, text } ) => {
 		html,
 		targets,
 		targetings,
+		images
 	} = creativeAd;
 
 	if ( !html ) {
@@ -33,17 +34,11 @@ const Ad = ( { ad, creativeAd, text } ) => {
 
 	return (
 		<div className={cx( 'container' )}>
-			<CreativeAd html={isPost2020(html) ? post2020HtmlToFakeHtml(html) : html} />
+			<CreativeAd html={isPost2020(html) ? post2020HtmlToFakeHtml(html, images.map((path) => `https://storage.googleapis.com/facebook_ad_images/${path}`)) : html} />
 			{
-				targetings && targetings[0] && targetings[0][0] === '<' // cleanup since sometimes an ad target isn't html
+				targetings && targetings[0]
 					? (
-						<div className="targetingHtml" dangerouslySetInnerHTML={{ __html: targetings[0] }} />
-					) : null
-			}
-			{
-				targets && targets[0]
-					? (
-						<Targets targets={targets} inAd={true}/>
+						<AdTargeting targets={targetings} inAd={true}/>
 					) : null
 			}
 			<AdDetails ad={ad} creativeAd={creativeAd} text={text} />
