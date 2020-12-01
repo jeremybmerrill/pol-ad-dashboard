@@ -38,12 +38,12 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 	const { currency } = ad ? ad.ads.find( subAd => !subAd.id ) : { currency: 'USD' }; // find the FBPAC version of the ad which contains more price data
 	const {
 		advertiser,
+        page_id,
 		observed_at_min,
 		impressions,
 		paid_for_by,
 		observed_at_max,
 		html,
-		text_hash,
 		ad_creative_link_caption,
 		ad_creative_link_title,
 		ad_creative_link_description,
@@ -58,7 +58,7 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 			className={cx( 'details-container' )}
 		>
 			<div>
-			<h4 className={cx( 'title' )}><Link to={`/advertiser/${encodeURI( advertiser )}`}>{advertiser}</Link></h4>
+			<h4 className={cx( 'title' )}><Link to={`/advertiser/${page_id}`}>{advertiser}</Link></h4>
 			<h4 className={cx( 'paid-for' )}>Paid for by: {paid_for_by || 'Unknown'}</h4>
 			<p className={cx( 'text' )}>{text}</p>
 			<p className={cx( 'text' )}>{ad_creative_link_caption}</p>
@@ -74,13 +74,13 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 					) : null
 			}
 			<p className={cx( 'sub' )}>
-				<span>First seen: {`${observedAtMin.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
+				<span>First seen: {`${observedAtMin.toLocaleDateString( 'en-US', { dateStyle: 'full' } )} ${observedAtMin.toLocaleTimeString( 'en-US')}`}</span>
 			</p>
 			{
 				observedAtMax
 					? (
 						<p className={cx( 'sub' )}>
-							<span>Last seen: {`${observedAtMax.toLocaleDateString( 'en-US', { dateStyle: 'full' } )}`}</span>
+							<span>Last seen: {`${observedAtMax.toLocaleDateString( 'en-US', { dateStyle: 'full' } )} ${observedAtMax.toLocaleTimeString( 'en-US')}`}</span>
 						</p>
 					) : null
 			}
@@ -100,7 +100,7 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 				</div>
 			</Modal>
 */}	
-			<Link to={'/ad/' + text_hash }>Ad Details</Link>
+			<Link to={'/ad/' + id }>Ad Details</Link>
 			{
 				html ? <span> • <a href={ "https://www.facebook.com/ads/library/?id=" + (id) }>FB ad library</a></span> : null
 			}

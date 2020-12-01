@@ -19,23 +19,23 @@ const findColor = ( idx ) => {
 	return findColor( idx - COLORS.length );
 };
 
-const Advertiser = ( { getAdvertiserByName } ) => {
+const Advertiser = ( { search } ) => {
 	const [ advertiserData, setAdvertiserData ] = useState( null );
-	const { advertiser } = useParams();
+	const { page_id } = useParams();
 
 	useEffect( () => {
 		const getAdvertiserData = async () => {
-			const data = await getAdvertiserByName( advertiser );
+			const data = await search( {'page_ids': [JSON.stringify([page_id])] } );
 			setAdvertiserData( data );
 		};
 		getAdvertiserData();
-	}, [ advertiser, getAdvertiserByName ] );
+	}, [ page_id, search ] );
 
 	if ( !advertiserData ) {
 		return (
 			<div className={cx( 'container' )}>
 				<div className={cx( 'advertiser-container' )}>
-					<h2>{advertiser}</h2>
+					<h2>{page_id.toString()}</h2>
 				</div>
 			</div>
 		);
@@ -43,23 +43,21 @@ const Advertiser = ( { getAdvertiserByName } ) => {
 
 	const {
 		ads,
-		fbpac_ads,
 		payers,
 		precise_spend,
 		topics,
 		targetings,
-		page_id,
 		notes
 	} = advertiserData;
 
 	return (
 		<div className={cx( 'container' )}>
 			<div className={cx( 'advertiser-container' )}>
-				<h2>{advertiser}</h2>
+				<h2>{ads[0]["advertiser"]}</h2>
 				<div className={cx( 'adv-section', 'spend' )}>
 					<div>{precise_spend ? `$${precise_spend.toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, '$1,' )} spent` : 'Unknown spend'}</div>
-					<div>{ads || 0} Facebook API ads</div>
-					<div>{fbpac_ads || 0} FBPAC ads</div>
+					<div>{0} Facebook API ads</div>
+					<div>{ads.length || 0} Ad Observer ads</div>
 					<div>{notes}</div>
 				</div>
 				<div className={cx( 'adv-section', 'topics' )}>
@@ -114,7 +112,7 @@ const Advertiser = ( { getAdvertiserByName } ) => {
 };
 
 Advertiser.propTypes = {
-	getAdvertiserByName: PropTypes.func.isRequired,
+	search: PropTypes.func.isRequired,
 };
 
 export default withAPI( Advertiser );

@@ -25,12 +25,13 @@ const useQuery = ( pathname ) => {
 		// don't do anything special for searches.
 	}
 	else if ( pathname.includes( '/advertiser' ) ) {
-		const { advertiser } = params;
-		searchParams["advertisers"] = [ JSON.stringify([advertiser]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one.*/
+		const { page_id } = params;
+		console.log("params", page_id);
+		searchParams["page_ids"] = [ JSON.stringify([page_id]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one.*/
 	}
 	else if ( pathname.includes( '/payer' ) ) {
 		const { payer } = params;
-		searchParams["paid_for_by"] = [ payer ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one. */
+		searchParams["paid_for_bys"] = [ JSON.stringify([payer]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one. */
 	} else {
 		// do nothing.
 	}

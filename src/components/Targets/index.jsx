@@ -4,7 +4,6 @@ import { withURLSearchParams } from 'utils';
 import { Button, Divider, Icon, Label } from 'semantic-ui-react';
 import classnames from 'classnames/bind';
 import styles from './Targets.module.css';
-import {friendlifyTargeting} from './transformTargeting'
 const cx = classnames.bind( styles );
 
 export const TargetFilters = ( { getParam } ) => {
@@ -16,8 +15,8 @@ export const TargetFilters = ( { getParam } ) => {
 	}
 
 	for ( const targetParam of targets ) {
-		const [ target, segment ] = targetParam;
-		formattedTargets.push( { target, segment } );
+		const [ filter_target, filter_segment ] = targetParam;
+		formattedTargets.push( { filter_target, filter_segment } );
 	}
 
 	return (
@@ -36,7 +35,7 @@ TargetFilters.propTypes = {
 };
 
 const TargetButton = ( { isPresent, target, targetSearch, inAd } ) => {
-	const { target: type, segment, count } = target;
+	const { filter_target: type, filter_segment, count } = target;
 	return (
 		<div className={cx( 'button-group' )}>
 			<div className={inAd ? cx('inad') : ''}>
@@ -44,7 +43,7 @@ const TargetButton = ( { isPresent, target, targetSearch, inAd } ) => {
 				{
 					isPresent
 						? (
-							<Button className={cx('redx')} icon color="red" onClick={targetSearch( isPresent, type, segment )}>
+							<Button className={cx('redx')} icon color="red" onClick={targetSearch( isPresent, type, filter_segment )}>
 								<Icon name="close" />
 							</Button>
 						) : null
@@ -54,14 +53,14 @@ const TargetButton = ( { isPresent, target, targetSearch, inAd } ) => {
 						count && <Label pointing="right">{count}</Label>
 					}
 					<Button>
-						{target.target}
+						{target.target_nicename || target.filter_target}
 					</Button>
 				</Button>
 				{
-					target.segment
+					target.filter_segment
 						? (
-							<Button color="olive" onClick={targetSearch( isPresent, type, segment )}>
-								{target.segment}
+							<Button color="olive" onClick={targetSearch( isPresent, type, target.filter_segment )}>
+								{target.segment_nicename || target.filter_segment}
 							</Button>
 						) : null
 				}
@@ -71,87 +70,6 @@ const TargetButton = ( { isPresent, target, targetSearch, inAd } ) => {
 	);
 };
 
-// this is used in ads.
-const UnwrappedAdTargeting = ({
-	targets,
-	getParam,
-	setParam,
-}) => {
-	const parsedTargets = JSON.parse( getParam( 'targeting' ) ) || [];
-	const formattedParsedTargets = parsedTargets.map( toFormat => ( { target: toFormat[0], segment: toFormat[1] } ) );
-
-	const targetSearch = ( isPresent, type, segment ) => () => {
-		let newTargets;
-		if ( isPresent ) {
-			// remove if we already have this target
-			newTargets = parsedTargets.filter( parsedTarget => parsedTarget[1] ? ( parsedTarget[0] !== type || parsedTarget[1] !== segment ) : parsedTarget[0] !== type );
-		} else {
-			// otherwise add new target to list and push to history
-			newTargets = parsedTargets.concat( [ [ type, segment ] ] );
-		}
-		setParam( 'targeting', newTargets.length ? JSON.stringify( newTargets ) : '' );
-	};
-
-	const subcategoryLookup = {
-		// functions that take a targeting table row and output a list of objects like [{"target": "Some Kind of Targeting", "segment": "The Details"}, ...]
-		// this is the equivalent of the category/subcategory thing from https://github.com/OnlinePoliticalTransparency/FacebookAdsAnalysis/blob/master/sql/unified_schema.sql#L621-L668
-		// plus transformTargeting https://github.com/OnlinePoliticalTransparency/poladstransparency-17744/blob/master/src/utils/transformTargeting.js
-		"LOCATION": (targeting) => [{"location_name": targeting["location_name"], "location_type": targeting["location_type"]}],
-		"AGE_GENDER": (targeting) => [{'age_min': targeting["age_min"] + 12, 'age_max': targeting["age_max"] + 12, 'gender': targeting["gender"]}],
-		"INTERESTS": (targeting) => [targeting["interests"]],
-
-		"CUSTOM_AUDIENCES_LOOKALIKE": (targeting) => [{"match_keys": targeting["dfca_data"]["match_keys"], "ca_owner_name": targeting["dfca_data"]["ca_owner_name"]}],
-		// "LOCALE": (targeting) => ,
-		"CUSTOM_AUDIENCES_DATAFILE": (targeting) => [{"ca_owner_name": targeting["dfca_data"]["ca_owner_name"]}],
-
-		"CUSTOM_AUDIENCES_ENGAGEMENT_PAGE": (targeting) => [targeting],
-		"CUSTOM_AUDIENCES_WEBSITE": (targeting) => [targeting],
-		"BCT": (targeting) => ["name", targeting["name"]],
-		"CUSTOM_AUDIENCES_ENGAGEMENT_VIDEO": (targeting) =>  [targeting],
-		"DYNAMIC_RULE": (targeting) =>  [targeting],
-		"FRIENDS_OF_CONNECTION": (targeting) =>  [targeting],
-		"CUSTOM_AUDIENCES_ENGAGEMENT_IG": (targeting) =>  [targeting],
-		"CONNECTION": (targeting) =>  [targeting],
-		"ED_STATUS": (targeting) =>  [targeting["edu_status"]],
-		"RELATIONSHIP_STATUS": (targeting) =>  [targeting],
-		"EDU_SCHOOLS": (targeting) =>  [targeting],
-		"CUSTOM_AUDIENCES_MOBILE_APP": (targeting) =>  [targeting],
-		"ACTIONABLE_INSIGHTS": (targeting) =>  [targeting],
-		"WORK_JOB_TITLES": (targeting) =>  [targeting],
-		"CUSTOM_AUDIENCES_ENGAGEMENT_EVENT": (targeting) =>  [targeting],
-		"WORK_EMPLOYERS": (targeting) =>  [targeting],
-		"CUSTOM_AUDIENCES_OFFLINE": (targeting) =>  [targeting],
-		"CUSTOM_AUDIENCES_ENGAGEMENT_LEAD_GEN": (targeting) =>  [targeting],
-		"COLLABORATIVE_AD": (targeting) =>  [targeting],
-
-		// an initial attempt
-		// "LOCATION": (targeting) => [{"target": "Location", "segment": targeting["location_name"]}, {"target": "Location Granularity", "segment": targeting["serialized_data"]["location_granularity"]}],
-		// "AGE_GENDER": (targeting) => [{"target": "MinAge", "segment": targeting["age_min"] + 12}, targeting["age_max"] != 53 ? {"target": "MaxAge", "segment": targeting["age_max"] + 12} : null].filter((a) => a),
-		// "INTERESTS": (targeting) => targeting["interests"].map((interest) => ({"target": "Interest", "segment": interest["name"]})),
-		// "CUSTOM_AUDIENCES_LOOKALIKE": (targeting) => [{"target": "Lookalike", "segment": null}],
-		// // "LOCALE": (targeting) => // boring!
-		// "CUSTOM_AUDIENCES_DATAFILE": (targeting) => [{"target": "List", "segment": null}] // TODO: audience uploader
-
-	}
-	return (
-		<div className={cx( 'container' )}>
-			{
-				targets.map((targeting) => {
-					const subcategories = (subcategoryLookup[targeting["waist_ui_type"]] || ((a) => { return []}))(targeting);
-					return subcategories.map((subcategory) => {
-						return friendlifyTargeting(targeting["waist_ui_type"], subcategory).map(([target, segment]) => ({"target": target, "segment": segment }));
-					});
-				}).flat(2).map( ( target, idx ) => {
-					const isPresent = formattedParsedTargets.some( item => target.target === item.target && target.segment === item.segment );
-					return (
-						<TargetButton key={`${target.segment}-${idx}`} target={target} isPresent={isPresent}  targetSearch={targetSearch}/>
-					);
-				} )
-			}
-		</div>
-	);
-}
-
 // this is used in the search sidebar.
 const Targets = ( {
 	getParam,
@@ -160,17 +78,18 @@ const Targets = ( {
 	inAd
 } ) => {
 	const parsedTargets = JSON.parse( getParam( 'targeting' ) ) || [];
-	const formattedParsedTargets = parsedTargets.map( toFormat => ( { target: toFormat[0], segment: toFormat[1] } ) );
+	const formattedParsedTargets = parsedTargets.map( toFormat => ( { filter_target: toFormat[0], filter_segment: toFormat[1] } ) );
 
-	const targetSearch = ( isPresent, type, segment ) => () => {
+	const targetSearch = ( isPresent, type, filter_segment ) => () => {
 		let newTargets;
 		if ( isPresent ) {
 			// remove if we already have this target
-			newTargets = parsedTargets.filter( parsedTarget => parsedTarget[1] ? ( parsedTarget[0] !== type || parsedTarget[1] !== segment ) : parsedTarget[0] !== type );
+			newTargets = parsedTargets.filter( parsedTarget => parsedTarget[1] ? ( parsedTarget[0] !== type || parsedTarget[1] !== filter_segment ) : parsedTarget[0] !== type );
 		} else {
 			// otherwise add new target to list and push to history
-			newTargets = parsedTargets.concat( [ [ type, segment ] ] );
+			newTargets = parsedTargets.concat( [ [ type, filter_segment ] ] );
 		}
+		// only sometimes: this.props.history.push('/search')
 		setParam( 'targeting', newTargets.length ? JSON.stringify( newTargets ) : '' );
 	};
 
@@ -178,9 +97,9 @@ const Targets = ( {
 		<div className={cx( 'container' )}>
 			{
 				targets.map( ( target, idx ) => {
-					const isPresent = formattedParsedTargets.some( item => target.target === item.target && target.segment === item.segment );
+					const isPresent = formattedParsedTargets.some( item => target.filter_target === item.filter_target && target.filter_segment === item.filter_segment );
 					return (
-						<TargetButton key={`${target.segment}-${idx}`} target={target} targetSearch={targetSearch} isPresent={isPresent} inAd={inAd} />
+						<TargetButton key={`${target.filter_segment}-${idx}`} target={target} targetSearch={targetSearch} isPresent={isPresent} inAd={inAd} />
 					);
 				} )
 			}
@@ -195,5 +114,4 @@ Targets.propTypes = {
 };
 
 const WrappedTargets = withURLSearchParams( Targets );
-export const AdTargeting = withURLSearchParams( UnwrappedAdTargeting )
 export default WrappedTargets;

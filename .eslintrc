@@ -1,7 +1,4 @@
 {
-    "extends": [
-        "@quartz/eslint-config-react"
-    ],
     "parser": "babel-eslint",
     "rules": {
         "react/prop-types": 0,

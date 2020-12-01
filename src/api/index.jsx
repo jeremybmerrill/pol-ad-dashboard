@@ -1,64 +1,54 @@
 import React from 'react';
 import Login from 'components/Login';
 
-const DASHBOARD_URL = process.env.NODE_ENV == 'development' ? 'http://localhost:5000' : 'https://dashboard-backend.ad-observatory.com';
+const API_URL = (process.env.NODE_ENV == 'development' || window.location.href.indexOf("localhost:") > -1) ? 'http://localhost:5000' : 'https://adobserver.ad-observatory.com';
 
 const AuthContext = React.createContext();
 
 class API extends React.Component {
 	constructor( props ) {
 		super( props );
-		this.baseURL = DASHBOARD_URL;
-		const existingUser = document.cookie.split( ';' ).find( val => val.includes( 'cred' ) );
-		let cred = '';
-		if ( existingUser ) {
-			[ , cred ] = existingUser.split( '=' );
-		}
+		this.baseURL = API_URL;
 		this.state = {
-			cred,
-			user: '',
-			pass: '',
 			loading: false,
-			loggedIn: !!existingUser,
 		};
-	}
-
-	setLogin = async () => {
-		const { user, pass } = this.state;
-		const cred = btoa( `${user}:${pass}` );
-		await this.setState( { cred, loading: true } );
-		const res = await this.getTopics();
-		if ( !res.error || ( res.error && !res.error === 'Invalid Email or password.' ) ) {
-			this.setState( { loggedIn: true, loading: false } );
-			document.cookie = `cred=${cred}`;
-		} else {
-			this.setState( { loading: false } );
-		}
 	}
 
 	async get( url ) {
 		const { cred } = this.state;
 		const res = await fetch( url, {
 			method: 'GET',
-			headers: {
-				// TODO - plug in actual auth
-				Authorization: `Basic ${cred}`,
-				'Content-Type': 'application/json',
-			},
-		} );
+			credentials: 'include'
+			// headers: {
+			// 	// TODO - plug in actual auth
+			// 	Authorization: `Basic ${cred}`,
+			// 	'Content-Type': 'application/json',
+			// },
+		} ).then((response) => {
+		    if (response.status == 401) {
+		      const login_url = new URL(url);
+		      login_url.pathname = "/login"
+		      window.location = login_url.toString()  ; // redirect us to the API URL, which'll send us to the login URL.
+		    }
+		    return response;
+		});
 		const data = res.json();
 		return data;
 	}
 
 	getAd = ( adId ) => this.get( `${this.baseURL}/aoapi/ads_by_text/${adId}` );
 
-	getAdvertiserByName = ( name ) => this.get( `${this.baseURL}/aoapi/pages_by_name/${encodeURIComponent( name )}.json` );
-
-	getPayerByName = ( name ) => this.get( `${this.baseURL}/aoapi/payers_by_name/${encodeURIComponent( name )}.json` );
-
 	getAdByTextHash = ( text_hash ) => this.get( `${this.baseURL}/aoapi/ads_by_text/${encodeURIComponent( text_hash )}.json` );
 
+	getAdByAdId = (ad_id) => this.get(`${this.baseURL}/aoapi/ads_by_ad_id/${encodeURIComponent( ad_id )}`)
+
 	getTopics = () => this.get( `${this.baseURL}/aoapi/topics.json` );
+
+	getSummaryData = ( params = {} ) => {
+		const parsedParams = new URLSearchParams();
+		Object.entries( params ).filter(([key, val]) => val).forEach(([key, val]) => parsedParams.set(key, val))
+		return this.get( `${this.baseURL}/aoapi/pivot.json?${parsedParams}` );
+	}
 
 	handleChange = ( key ) => ( _, { value } ) => this.setState( { [key]: value } );
 
@@ -73,21 +63,14 @@ class API extends React.Component {
 		const baseProps = {
 			getAd: this.getAd,
 			getAdvertiserByName: this.getAdvertiserByName,
+			getAdvertiserByPageID: this.getAdvertiserByPageID,
 			getPayerByName: this.getPayerByName,
 			getAdByTextHash: this.getAdByTextHash,
+			getAdByAdId: this.getAdByAdId,
 			getTopics: this.getTopics,
+			getSummaryData: this.getSummaryData,
 			search: this.search,
 		};
-
-		if ( !loggedIn ) {
-			return (
-				<Login
-					handleChange={this.handleChange}
-					loading={loading}
-					onSubmit={this.setLogin}
-				/>
-			);
-		}
 
 		return (
 			<AuthContext.Provider value={{ ...baseProps }}>

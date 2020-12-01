@@ -4,12 +4,13 @@ import DOMPurify from 'dompurify';
 
 import AdDetails, { CreativeAd } from './AdDetails';
 import classnames from 'classnames/bind';
-import {AdTargeting} from '../Targets';
+import Targets from '../Targets';
 import styles from './Ad.module.css';
 import makeAdHtml  from './utilities'
 // Facebook-ad specific styling
 // eslint-disable-next-line
 import './fb_ad.scss';
+import { targetingLineToButtons } from '../Targets/transformTargeting'
 
 const cx = classnames.bind( styles );
 
@@ -25,7 +26,8 @@ const Ad = ( { ad, creativeAd, text } ) => {
 		html,
 		targets,
 		targetings,
-		images
+		images,
+		thumbnail
 	} = creativeAd;
 
 	if ( !html ) {
@@ -34,11 +36,11 @@ const Ad = ( { ad, creativeAd, text } ) => {
 
 	return (
 		<div className={cx( 'container' )}>
-			<CreativeAd html={isPost2020(html) ? post2020HtmlToFakeHtml(html, images.map((path) => `https://storage.googleapis.com/facebook_ad_images/${path}`)) : html} />
+			<CreativeAd html={isPost2020(html) ? post2020HtmlToFakeHtml(html, images.map((path) => `https://storage.googleapis.com/facebook_ad_images/${path}`),  `https://storage.googleapis.com/facebook_ad_images/${thumbnail}`) : html} />
 			{
 				targetings && targetings[0]
 					? (
-						<AdTargeting targets={targetings} inAd={true}/>
+						<Targets targets={targetings.map((targeting) => targetingLineToButtons(targeting["waist_ui_type"], targeting["subcategory_json"])).flat(1)} inAd={true}/>
 					) : null
 			}
 			<AdDetails ad={ad} creativeAd={creativeAd} text={text} />

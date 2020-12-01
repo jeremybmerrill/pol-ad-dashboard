@@ -19,17 +19,17 @@ const findColor = ( idx ) => {
   return findColor( idx - COLORS.length );
 };
 
-const Payer = ( { getPayerByName } ) => {
+const Payer = ( { search } ) => {
   const [ payerData, setPayerData ] = useState( null );
   const { payer } = useParams();
 
   useEffect( () => {
     const getPayerData = async () => {
-      const data = await getPayerByName( payer );
+      const data = await search( {'payers': [JSON.stringify([payer])] } );
       setPayerData( data );
     };
     getPayerData();
-  }, [ payer, getPayerByName ] );
+  }, [ payer, search ] );
 
   if ( !payerData ) {
     return (
@@ -54,11 +54,11 @@ const Payer = ( { getPayerByName } ) => {
   return (
     <div className={cx( 'container' )}>
       <div className={cx( 'payer-container' )}>
-        <h2>{payer}</h2>
+        <h2>{payer.toString()}</h2>
         <div className={cx( 'adv-section', 'spend' )}>
           <div>{precise_spend ? `$${precise_spend.toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, '$1,' )} spent` : 'Unknown spend'}</div>
-          <div>{ads || 0} Facebook API ads</div>
-          <div>{fbpac_ads || 0} FBPAC ads</div>
+          <div>{0} Facebook API ads</div>
+          <div>{ads.length || 0} FBPAC ads</div>
           <div>{notes}</div>
         </div>
         <div className={cx( 'adv-section', 'topics' )}>
@@ -113,7 +113,7 @@ const Payer = ( { getPayerByName } ) => {
 };
 
 Payer.propTypes = {
-  getPayerByName: PropTypes.func.isRequired,
+  search: PropTypes.func.isRequired,
 };
 
 export default withAPI( Payer );

@@ -10,6 +10,7 @@ import Credits from 'components/Credits'
 import classnames from 'classnames/bind';
 import Search from 'components/Search';
 import styles from './Layout.module.css';
+import { Link } from 'react-router-dom';
 
 const cx = classnames.bind( styles );
 
@@ -19,7 +20,7 @@ const CommonTargets = () => (
 		<ul className={cx( 'target-list' )}>
 			{
 				Object.keys( COMMON_TARGETS_GROUPED ).sort().map( ( target, idx ) => {
-					const vals = COMMON_TARGETS_GROUPED[target].map( val => ( { target, segment: val } ) );
+					const vals = COMMON_TARGETS_GROUPED[target].map( val => ( { filter_target: target, filter_segment: val } ) );
 					return (
 						<li className={cx( 'target-item' )} key={idx}>
 							<details className={cx( 'target-details' )}>
@@ -47,7 +48,7 @@ const Layout = ( {
 } ) => (
 	<div className={cx( 'layout' )}>
 		<div className={cx( 'left-rail' )}>
-			<h1>Ad Observer dashboard</h1>
+			<h1><Link to="/">Ad Observer dashboard</Link></h1>
 			{
 				pathname === '/search' && (
 					<Fragment>
@@ -65,15 +66,15 @@ const Layout = ( {
 				checked={search.includes( 'only_fbpac=true' )}
 				onClick={() => toggleParam( 'only_fbpac' )}
 				className={cx('checkbox')}
-			/>
-*/}			<Checkbox
+			/> */}	
+	 		<Checkbox
 				label="Only ads without 'Paid For By' disclaimer"
 				checked={search.includes( 'no_payer=true' )}
 				onClick={() => toggleParam( 'no_payer' )}
 				className={cx('checkbox')}
 			/>
 			<Divider />
-			<Topics />
+{/*			<Topics /> */}			
 			<TargetFilters getParam={getParam} />
 			<Divider />
 			<CommonTargets />

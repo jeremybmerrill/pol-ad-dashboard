@@ -21,6 +21,15 @@ const hasATagParent = (el /* DOM Element */) => {
   return null;
 };
 
+const hasATagNextSibling = (el /* DOM Element */) => {
+  while (el.parentNode) {
+    el = el.parentNode;
+    if (el.nextElementSibling && el.nextElementSibling.tagName && el.nextElementSibling.tagName.toLowerCase() === 'a') return el;
+  }
+  return null;
+};
+
+
 const getAdImg = (doc, our_hosted_images) => {
   const ad_images = [...doc.querySelectorAll('img')];
   ad_images
@@ -113,28 +122,28 @@ const getAdCopy = (doc, cx) => {
 };
 
 const getAdCTA = (doc, cx) => {
+  doc = doc.cloneNode(true)
+  doc.querySelectorAll('div[role="button"]')
+    .forEach((elem) => elem.parentNode.removeChild(elem));
+  doc.querySelectorAll('a[rel="noopener nofollow"]')
+    .forEach((elem) => elem.parentNode.removeChild(elem)); // this is the CTA Link (attempt 1), we'll get this later!
+  doc.querySelectorAll('a[aria-label]')
+    .forEach((elem) => elem.parentNode.removeChild(elem)); // this is the CTA Link (attempt 2), we'll get this later!
   const html = [
     ...doc.querySelectorAll('div[dir="auto"], span[dir="auto"]'),
   ].reduce((str, el) => {
-    // The ad copy that appears after the image must have an A tag.
-    if (el.childElementCount > 1 || !hasATagParent(el)) {
+
+    if ((el.querySelectorAll(':scope div[dir="auto"], :scope span[dir="auto"]').length >= 1) || (!hasATagParent(el) && !hasATagNextSibling(el)))
       return str;
-    }
-    // This 'el' could still be valid it has a child element for the reason of
-    // an emoji.
-    if (el.childElementCount === 1 && el.innerHTML.indexOf('/emoji.php') >= 0) {
-      return str + el.innerHTML;
-    }
-    if (el.childElementCount === 0) {
-      return `${str + el.innerHTML}<br />`;
-    }
-    return str;
+    return `${str + el.innerHTML}<br />`;
+
   }, '<br>');
   return `<div class="${cx('ati-item-cta')}">${html}</div>`;
 };
 
 const getCTALink = (doc, cx) => {
   // Attempt 1.
+  doc = doc.cloneNode(true);
   doc
     .querySelectorAll('div.fbStoryAttachmentImage')
     .forEach((elem) => elem.parentNode.removeChild(elem));
