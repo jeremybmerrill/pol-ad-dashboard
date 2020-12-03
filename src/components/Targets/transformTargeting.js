@@ -182,7 +182,7 @@ export const targetingLineToButtons = (waist_ui_type, subcategory_json) => {
     case 'LOCALE':
       targets_json = {filter_target: 'LOCALE', target_nicename: 'Speakers of'};
       if (!subcategory_json) return [targets_json];
-      return JSON.parse(subcategory_json.locales.replace("{", "[").replace("}", "]")).map((locale) => ({...targets_json, filter_segment: locale}));
+      return subcategory_json.locales.replace("{", "").replace("}", "").split(",").map((locale) => ({...targets_json, filter_segment: locale}));
     case 'ACTIONABLE_INSIGHTS':
       targets_json = {filter_target: 'ACTIONABLE_INSIGHTS', target_nicename: 'Behavior'};
       if (!subcategory_json) return [targets_json];
