@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button, Modal } from 'semantic-ui-react';
 import classnames from 'classnames/bind';
 import styles from './AdDetails.module.css';
 
@@ -84,22 +83,7 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 						</p>
 					) : null
 			}
-{/*			<Modal
-				dimmer="inverted"
-				size="fullscreen"
-				trigger={<Button>Ad Details</Button>}
-				style={{
-					minHeight: '80vh',
-				}}
-			>
-				<div className={cx( 'modal-content' )}>
-					<CreativeAd html={html} />
-					<div className={cx( 'right-rail' )}>
-						<p>Placeholder content (awaiting further ad data)</p>
-					</div>
-				</div>
-			</Modal>
-*/}	
+
 			<Link to={'/ad/' + id }>Ad Details</Link>
 			{
 				html ? <span> • <a href={ "https://www.facebook.com/ads/library/?id=" + (id) }>FB ad library</a></span> : null
