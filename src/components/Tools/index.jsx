@@ -28,7 +28,8 @@ const Tools = () => (
     <li><Link to="/pivot?kind=paid_for_by&time_unit=electioncycle&time_count=1">Seen this election cycle</Link></li>
     <li><Link to="/pivot?kind=paid_for_by">Seen ever</Link></li>
   </ul>
-  <h4>Segments</h4>
+{/*  Commented out 12/3/2020 by JBFM -- this is too slow of a query to use in a live site... for now.
+  <h4>Segments</h4> 
   <ul>
     <li><Link to="/pivot?kind=segments&time_unit=week&time_count=1&first_seen=1">New this week</Link></li>
     <li><Link to="/pivot?kind=segments&time_unit=week&time_count=1">Seen this week</Link></li>
@@ -37,7 +38,7 @@ const Tools = () => (
     <li><Link to="/pivot?kind=segments&time_unit=electioncycle&time_count=1">Seen this election cycle</Link></li>
     <li><Link to="/pivot?kind=segments">Seen ever</Link></li>
   </ul>
-  <h4>Custom Audience Owners</h4>
+*/}  <h4>Custom Audience Owners</h4>
   <ul>
     <li><Link to="/pivot?kind=list_uploaders&time_unit=week&time_count=1&first_seen=1">New this week</Link></li>
     <li><Link to="/pivot?kind=list_uploaders&time_unit=week&time_count=1">Seen this week</Link></li>

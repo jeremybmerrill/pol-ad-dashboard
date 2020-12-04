@@ -40,15 +40,17 @@ const Pivot = ({ getSummaryData, setParam, location: { search } }) => {
     }else if (kind === "paid_for_by"){
       history.push( `/payer/${ rowData[`${kind}.0`] }`)
     }else{
-      history.push('/search')
-      setParam( 'targeting', JSON.stringify( targetingLineToButtons(...rowData.kind[`${kind}.0`]) ));
+      history.push({
+        pathname: '/search',
+        search: "?" + new URLSearchParams({targeting: JSON.stringify( [[rowData["0.filter_target"], rowData["0.filter_segment"] ]] )})
+      })
+      // {0.filter_target: "Location", 0.filter_segment: "the United States", targets: "Location", subcategory: "the United States", count: "34,745,378"}
     }
   }
 
   const targetingDataToPair = (category, subcategory) => {
     const res = targetingLineToButtons(category, subcategory);
-    console.log(res);
-    return {"targets": res.map((row) => row.target_nicename || row.filter_target ).join(" / "), "subcategory": res.map((row) => row.segment_nicename || row.filter_segment ).join(" / ")}
+    return {...res, ...{"targets": res.map((row) => row.target_nicename || row.filter_target ).filter((a) => a && a != '').join(" / "), "subcategory": res.map((row) => row.segment_nicename || row.filter_segment ).filter((a) => a && a != '').join(" / ")}}
   }
 
   if ( !pivotData ) {

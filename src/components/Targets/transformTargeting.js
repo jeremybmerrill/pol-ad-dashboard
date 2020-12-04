@@ -20,51 +20,10 @@ const friendlyRelationshipStatus = (subcategory) => {
   }
 };
 
-  // CASE waist_ui_type
-  //   WHEN 'ACTIONABLE_INSIGHTS' THEN jsonb_build_object('description', description)
-  //   WHEN 'AGE_GENDER' THEN jsonb_build_object('age_min', age_min, 'age_max', age_max, 'gender', gender)
-  //   WHEN 'BCT' THEN jsonb_build_object('name', name)
-  //   WHEN 'CONNECTION' THEN jsonb_build_object('name', name)
-  //   WHEN 'CUSTOM_AUDIENCES_DATAFILE' THEN jsonb_build_object('match_keys', dfca_data#>'{match_keys}', 'ca_owner_name', dfca_data#>'{ca_owner_name}')
-  //   WHEN 'CUSTOM_AUDIENCES_LOOKALIKE' THEN jsonb_build_object('ca_owner_name', dfca_data#>'{ca_owner_name}')
-  //   WHEN 'ED_STATUS' THEN jsonb_build_object('edu_status', edu_status)
-  //   WHEN 'EDU_SCHOOLS' THEN school_names
-  //   WHEN 'FRIENDS_OF_CONNECTION' THEN jsonb_build_object('name', name)
-  //   WHEN 'INTERESTS' THEN interests
-  //   WHEN 'LOCALE' THEN jsonb_build_object('locales', locales)
-  //   WHEN 'LOCATION' THEN jsonb_build_object('location_name', location_name, 'location_type', location_type)
-  //   WHEN 'RELATIONSHIP_STATUS' THEN serialized_data
-  //   WHEN 'WORK_JOB_TITLES' THEN job_title
-  //   WHEN 'WORK_EMPLOYERS' THEN employer_name
-  //   WHEN 'COLLABORATIVE_AD' THEN merchant_name
-  //   WHEN 'COLLABORATIVE_ADS_STORE_VISITS' THEN merchant_name
-  //   WHEN 'COLLABORATIVE_ADS_STORE_SALES' THEN merchant_name
-  //   ELSE NULL
-  // END AS subcategory_json,
-
-    // CASE waist_ui_type
-    //   WHEN 'ACTIONABLE_INSIGHTS' THEN description
-    //   WHEN 'AGE_GENDER' THEN concat(age_min, '-', age_max, ' ', gender)
-    //   WHEN 'BCT' THEN name
-    //   WHEN 'CONNECTION' THEN name
-    // WHEN 'CUSTOM_AUDIENCES_DATAFILE' THEN jsonb_build_object('match_keys', dfca_data#>'{match_keys}', 'ca_owner_name', dfca_data#>'{ca_owner_name}')#>>'{}'
-    // WHEN 'CUSTOM_AUDIENCES_LOOKALIKE' THEN dfca_data#>>'{ca_owner_name}'
-    //   WHEN 'ED_STATUS' THEN edu_status
-    //   WHEN 'EDU_SCHOOLS' THEN string_agg(school_names)
-    //   WHEN 'FRIENDS_OF_CONNECTION' THEN name
-    //   WHEN 'INTERESTS' THEN interests#>> '{}'
-    //   WHEN 'LOCALE' THEN locales
-    //   WHEN 'LOCATION' THEN concat(location_name, ' (', location_type, ')')
-    //   WHEN 'RELATIONSHIP_STATUS' THEN relationship_status
-    //   WHEN 'WORK_JOB_TITLES' THEN job_title
-    //   WHEN 'WORK_EMPLOYERS' THEN employer_name
-    //   WHEN 'COLLABORATIVE_AD' THEN merchant_name
-    //   WHEN 'COLLABORATIVE_ADS_STORE_VISITS' THEN merchant_name
-    //   WHEN 'COLLABORATIVE_ADS_STORE_SALES' THEN merchant_name      
-    //   ELSE NULL
-    // END AS subcategory
-
-
+export const friendlifyTargeting = (waist_ui_type, subcategory_json) => {
+  const button_data = targetingLineToButtons(waist_ui_type, subcategory_json);
+  return [button_data["target_nicename"] || button_data["filter_target"], button_data["segment_nicename"] || button_data["filter_segment"], ]
+}
 
 export const targetingLineToButtons = (waist_ui_type, subcategory_json) => {
   // map a targeting row to N objects like {"filter_target", filter_segment, [target_nicename, "segment_nicename"] }
@@ -178,7 +137,7 @@ export const targetingLineToButtons = (waist_ui_type, subcategory_json) => {
     case 'EDU_SCHOOLS':
       targets_json = {filter_target: 'EDU_SCHOOLS', target_nicename: 'School'};
       if (!subcategory_json) return [targets_json];
-      return subcategory_json.map((school_name) => ({...targets_json, filter_segment: school_name }));
+      return subcategory_json.school_ids.map((school_name) => ({...targets_json, filter_segment: school_name }));
     case 'LOCALE':
       targets_json = {filter_target: 'LOCALE', target_nicename: 'Speakers of'};
       if (!subcategory_json) return [targets_json];
