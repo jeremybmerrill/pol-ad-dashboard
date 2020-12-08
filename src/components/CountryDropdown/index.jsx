@@ -42,6 +42,4 @@ CountryFilterDropdown.propTypes = {
 	setParam: PropTypes.func.isRequired,
 };
 
-// <div class="ui segment"><i class="ae flag"></i><i class="france flag"></i><i class="myanmar flag"></i></div>
-
 export default compose( withAPI, withURLSearchParams )( CountryFilterDropdown );

@@ -46,7 +46,8 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 		ad_creative_link_caption,
 		ad_creative_link_title,
 		ad_creative_link_description,
-		id
+		id,
+        country_codes: countryCodes
 	} = creativeAd;
 
 	const observedAtMin = new Date( observed_at_min );
@@ -83,7 +84,9 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 						</p>
 					) : null
 			}
-
+            {
+                countryCodes ? <span class="ui">{countryCodes.map((code) => <i className={`${code.toLowerCase()} flag`}></i>)} </span> : null
+            }
 			<Link to={'/ad/' + id }>Ad Details</Link>
 			{
 				html ? <span> • <a href={ "https://www.facebook.com/ads/library/?id=" + (id) }>FB ad library</a></span> : null
