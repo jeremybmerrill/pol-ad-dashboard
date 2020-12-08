@@ -6,6 +6,7 @@ import { COMMON_TARGETS_GROUPED } from '../constants';
 import Targets, { TargetFilters } from 'components/Targets';
 import { filterDataToButtons } from '../Targets/transformTargeting'
 import Topics from 'components/Topics';
+import CountryDropdown from 'components/CountryDropdown';
 import Tools from 'components/Tools'
 import Credits from 'components/Credits'
 import classnames from 'classnames/bind';
@@ -75,6 +76,7 @@ const Layout = ( {
 				className={cx('checkbox')}
 			/>
 			<Divider />
+			<CountryDropdown />
 {/*			<Topics /> */}			
 			<TargetFilters getParam={getParam} />
 			<Divider />

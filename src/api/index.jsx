@@ -44,6 +44,8 @@ class API extends React.Component {
 
 	getTopics = () => this.get( `${this.baseURL}/aoapi/topics.json` );
 
+	getCountries = () => this.get(`${this.baseURL}/aoapi/countries.json`);
+
 	getSummaryData = ( params = {} ) => {
 		const parsedParams = new URLSearchParams();
 		Object.entries( params ).filter(([key, val]) => val).forEach(([key, val]) => parsedParams.set(key, val))
@@ -68,6 +70,7 @@ class API extends React.Component {
 			getAdByTextHash: this.getAdByTextHash,
 			getAdByAdId: this.getAdByAdId,
 			getTopics: this.getTopics,
+			getCountries: this.getCountries,
 			getSummaryData: this.getSummaryData,
 			search: this.search,
 		};
