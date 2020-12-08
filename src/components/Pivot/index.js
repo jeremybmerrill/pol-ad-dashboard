@@ -36,15 +36,14 @@ const Pivot = ({ getSummaryData, setParam, location: { search } }) => {
   const navigateToElement = (event, { rowData }) => {
     console.log(rowData)
     if (kind === "advertiser"){
-      history.push(`/advertiser/${ rowData[`${kind}.1`] }`)
+      history.push(`/advertiser/${ rowData["other"] }`)
     }else if (kind === "paid_for_by"){
-      history.push( `/payer/${ rowData[`${kind}.0`] }`)
+      history.push( `/payer/${ rowData["paid_for_by"] }`)
     }else{
       history.push({
         pathname: '/search',
         search: "?" + new URLSearchParams({targeting: JSON.stringify( [[rowData["0.filter_target"], rowData["0.filter_segment"] ]] )})
       })
-      // {0.filter_target: "Location", 0.filter_segment: "the United States", targets: "Location", subcategory: "the United States", count: "34,745,378"}
     }
   }
 
@@ -83,7 +82,7 @@ const Pivot = ({ getSummaryData, setParam, location: { search } }) => {
                "count": numberWithCommas(cnt)
              }))
 */}
-  <SmartDataTable data={pivotData.map(([thing, cnt]) => ({...(["targets", "segments"].includes(kind) ? targetingDataToPair(...thing) : {[kind]: thing[0]}), "count": numberWithCommas(cnt)}))}  name="test-table"
+  <SmartDataTable data={pivotData.map(([thing, cnt]) => ({...(["targets", "segments"].includes(kind) ? targetingDataToPair(...thing) : {[kind]: thing[0], other: thing[1]}), "count": numberWithCommas(cnt)}))}  name="test-table"
     className="ui compact selectable table"
     filterValue={filterValue}
     perPage={PAGE_SIZE}

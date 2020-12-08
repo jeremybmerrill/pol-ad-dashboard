@@ -33,6 +33,7 @@ const Ad = ( { ad, creativeAd, text } ) => {
 	if ( !html ) {
 		return <AdDetails creativeAd={creativeAd} text={text}/>;
 	}
+	console.log(targetings.map((targeting) => targetingLineToButtons(targeting["waist_ui_type"], targeting["subcategory_json"])).flat(1))
 
 	return (
 		<div className={cx( 'container' )}>

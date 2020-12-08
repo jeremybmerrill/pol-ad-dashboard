@@ -40,12 +40,12 @@ const Tools = () => (
   </ul>
 */}  <h4>Custom Audience Owners</h4>
   <ul>
-    <li><Link to="/pivot?kind=list_uploaders&time_unit=week&time_count=1&first_seen=1">New this week</Link></li>
-    <li><Link to="/pivot?kind=list_uploaders&time_unit=week&time_count=1">Seen this week</Link></li>
-    <li><Link to="/pivot?kind=list_uploaders&time_unit=month&time_count=3&first_seen=1">New past 3 months</Link></li>
-    <li><Link to="/pivot?kind=list_uploaders&time_unit=month&time_count=3">Seen past 3 months</Link></li>
-    <li><Link to="/pivot?kind=list_uploaders&time_unit=electioncycle&time_count=1">Seen this election cycle</Link></li>
-    <li><Link to="/pivot?kind=list_uploaders">Seen ever</Link></li>
+    <li><Link to="/pivot?kind=list_uploader&time_unit=week&time_count=1&first_seen=1">New this week</Link></li>
+    <li><Link to="/pivot?kind=list_uploader&time_unit=week&time_count=1">Seen this week</Link></li>
+    <li><Link to="/pivot?kind=list_uploader&time_unit=month&time_count=3&first_seen=1">New past 3 months</Link></li>
+    <li><Link to="/pivot?kind=list_uploader&time_unit=month&time_count=3">Seen past 3 months</Link></li>
+    <li><Link to="/pivot?kind=list_uploader&time_unit=electioncycle&time_count=1">Seen this election cycle</Link></li>
+    <li><Link to="/pivot?kind=list_uploader">Seen ever</Link></li>
   </ul>
 </div>);
 

@@ -4,6 +4,7 @@ import { Button, Checkbox, Divider } from 'semantic-ui-react';
 import { withURLSearchParams } from 'utils';
 import { COMMON_TARGETS_GROUPED } from '../constants';
 import Targets, { TargetFilters } from 'components/Targets';
+import { filterDataToButtons } from '../Targets/transformTargeting'
 import Topics from 'components/Topics';
 import Tools from 'components/Tools'
 import Credits from 'components/Credits'
@@ -20,7 +21,7 @@ const CommonTargets = () => (
 		<ul className={cx( 'target-list' )}>
 			{
 				Object.keys( COMMON_TARGETS_GROUPED ).sort().map( ( target, idx ) => {
-					const vals = COMMON_TARGETS_GROUPED[target].map( val => ( { filter_target: target, filter_segment: val } ) );
+					const vals = COMMON_TARGETS_GROUPED[target]
 					return (
 						<li className={cx( 'target-item' )} key={idx}>
 							<details className={cx( 'target-details' )}>
@@ -28,7 +29,7 @@ const CommonTargets = () => (
 									{target}
 								</summary>
 								<div className={cx( 'target-group' )}>
-									<Targets targets={vals} />
+									<Targets targets={vals.map((val) => filterDataToButtons(...val))} />
 								</div>
 							</details>
 						</li>

@@ -4,8 +4,11 @@ import { withURLSearchParams } from 'utils';
 import { Button, Divider, Icon, Label } from 'semantic-ui-react';
 import classnames from 'classnames/bind';
 import styles from './Targets.module.css';
+import { filterDataToButtons } from './transformTargeting'
+
 const cx = classnames.bind( styles );
 
+// these are the buttons that show up at the top of the search sidebar, showing which filters are currently enabled.
 export const TargetFilters = ( { getParam } ) => {
 	const targets = JSON.parse( getParam( 'targeting' ) );
 	const formattedTargets = [];
@@ -15,8 +18,7 @@ export const TargetFilters = ( { getParam } ) => {
 	}
 
 	for ( const targetParam of targets ) {
-		const [ filter_target, filter_segment ] = targetParam;
-		formattedTargets.push( { filter_target, filter_segment } );
+		formattedTargets.push( filterDataToButtons(... targetParam) );
 	}
 
 	return (
@@ -70,13 +72,15 @@ const TargetButton = ( { isPresent, target, targetSearch, inAd } ) => {
 	);
 };
 
-// this is used in the search sidebar.
 const Targets = ( {
 	getParam,
 	setParam,
 	targets,
-	inAd
+	inAd,
+	location,
+	history
 } ) => {
+	// get the currently-set targets, so we can know whether to render the X-out button
 	const parsedTargets = JSON.parse( getParam( 'targeting' ) ) || [];
 	const formattedParsedTargets = parsedTargets.map( toFormat => ( { filter_target: toFormat[0], filter_segment: toFormat[1] } ) );
 
@@ -90,7 +94,14 @@ const Targets = ( {
 			newTargets = parsedTargets.concat( [ [ type, filter_segment ] ] );
 		}
 		// only sometimes: this.props.history.push('/search')
-		setParam( 'targeting', newTargets.length ? JSON.stringify( newTargets ) : '' );
+		if(!['/search', '/advertiser', '/payer'].some((url) => location.pathname.indexOf(url) == 0)){ // these are routes that support filtering.
+		    history.push({
+		        pathname: '/search',
+		        search: "?" + new URLSearchParams({targeting: newTargets.length ? JSON.stringify( newTargets ) : ''})
+		    })
+		}else{
+			setParam( 'targeting', newTargets.length ? JSON.stringify( newTargets ) : '' );
+		}
 	};
 
 	return (
