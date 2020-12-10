@@ -85,7 +85,7 @@ const AdDetails = ( { ad, creativeAd, text } ) => {
 					) : null
 			}
             {
-                countryCodes ? <span class="ui">{countryCodes.filter((code) => code).map((code) => <i className={`${code.toLowerCase()} flag`}></i>)} </span> : null
+                countryCodes ? <span className="ui">{[...new Set(countryCodes)].filter((code) => code).map((code) => <i key={code} className={`${code.toLowerCase()} flag`}></i>)} </span> : null
             }
 			<Link to={'/ad/' + id }>Ad Details</Link>
 			{
