@@ -39,6 +39,11 @@ const Pivot = ({ getSummaryData, setParam, location: { search } }) => {
       history.push(`/advertiser/${ rowData["other"] }`)
     }else if (kind === "paid_for_by"){
       history.push( `/payer/${ rowData["paid_for_by"] }`)
+    }else if (kind === "list_uploader"){
+      history.push({
+        pathname: '/search',
+        search: "?" + new URLSearchParams({targeting: JSON.stringify( [["List Uploader", rowData["list_uploader"] ]] )})
+      })
     }else{
       history.push({
         pathname: '/search',
@@ -74,14 +79,6 @@ const Pivot = ({ getSummaryData, setParam, location: { search } }) => {
     <i className={'search icon'} />
   </div>
 
-
-{/*.map(([thing, cnt]) => 
-              ({[kind]: (kind === "targets") ? <Targets targets={targetingLineToButtons(thing[0], null)} /> : 
-                        (kind === "segments" ? <Targets targets={targetingLineToButtons(thing[0], thing[1])} /> :
-                        (<Link to={ kind === "paid_for_by" ? (`/payer/${ thing[0] }`) : (kind === "advertiser" ? (`/advertiser/${ thing[1] }`  ) : ('/')) }>{(thing[0] || '(none)')}</Link>)), 
-               "count": numberWithCommas(cnt)
-             }))
-*/}
   <SmartDataTable data={pivotData.map(([thing, cnt]) => ({...(["targets", "segments"].includes(kind) ? targetingDataToPair(...thing) : {[kind]: thing[0], other: thing[1]}), "count": numberWithCommas(cnt)}))}  name="test-table"
     className="ui compact selectable table"
     filterValue={filterValue}
