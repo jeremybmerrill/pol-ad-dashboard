@@ -13,6 +13,7 @@ import classnames from 'classnames/bind';
 import Search from 'components/Search';
 import styles from './Layout.module.css';
 import { Link } from 'react-router-dom';
+import { DEFAULT_MIN_POLIPROB } from '../constants'
 
 const cx = classnames.bind( styles );
 
@@ -47,6 +48,7 @@ const Layout = ( {
 	history,
 	location: { search, pathname },
 	toggleParam,
+	setParam
 } ) => (
 	<div className={cx( 'layout' )}>
 		<div className={cx( 'left-rail' )}>
@@ -69,6 +71,12 @@ const Layout = ( {
 				onClick={() => toggleParam( 'only_fbpac' )}
 				className={cx('checkbox')}
 			/> */}	
+	 		<Checkbox
+				label="Show all ads, regardless of political classification"
+				checked={JSON.parse((new URLSearchParams(search)).get("poliprob") || "[0]")[0] != DEFAULT_MIN_POLIPROB }
+				onClick={(e, data) => setParam( 'poliprob', JSON.stringify([data.checked ? 0 : DEFAULT_MIN_POLIPROB, 100] )) }
+				className={cx('checkbox')}
+			/>			
 	 		<Checkbox
 				label="Only ads without 'Paid For By' disclaimer"
 				checked={search.includes( 'no_payer=true' )}

@@ -1,3 +1,5 @@
+export const DEFAULT_MIN_POLIPROB = 80; // was 70 in propub land
+
 export const COMMON_TARGETS_GROUPED = {
 	MinAge: [
 		["MinAge", '13'],

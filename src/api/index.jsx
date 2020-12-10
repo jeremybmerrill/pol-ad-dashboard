@@ -1,9 +1,11 @@
 import React from 'react';
 import Login from 'components/Login';
+import { DEFAULT_MIN_POLIPROB } from '../components/constants'
 
 const API_URL = (process.env.NODE_ENV == 'development' || window.location.href.indexOf("localhost:") > -1) ? 'http://localhost:5000' : 'https://adobserver.ad-observatory.com';
 
 const AuthContext = React.createContext();
+
 
 class API extends React.Component {
 	constructor( props ) {
@@ -55,7 +57,7 @@ class API extends React.Component {
 	handleChange = ( key ) => ( _, { value } ) => this.setState( { [key]: value } );
 
 	search = ( params = {} ) => {
-		const { poliprobMin = 70, poliprobMax = 100 } = params;
+		const { poliprobMin = DEFAULT_MIN_POLIPROB, poliprobMax = 100 } = params;
 		const parsedParams = Object.keys( params ).map( param => `${param}=${params[param].map((p) => encodeURIComponent(p)).join( ',' )}` ).join( '&' );
 		return this.get( `${this.baseURL}/aoapi/ads/search.json?${parsedParams}&poliprob=[${poliprobMin},${poliprobMax}]` );
 	}
