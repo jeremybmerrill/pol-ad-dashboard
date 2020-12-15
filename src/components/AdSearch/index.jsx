@@ -7,7 +7,7 @@ import classnames from 'classnames/bind';
 import styles from './AdSearch.module.css';
 import AdWrapper from 'components/AdWrapper';
 import { withAPI } from 'api';
-
+import { DEFAULT_MIN_POLIPROB } from 'components/constants'
 const cx = classnames.bind( styles );
 
 const useQuery = ( pathname ) => {
@@ -30,8 +30,10 @@ const useQuery = ( pathname ) => {
 		const { payer } = params;
 		searchParams["paid_for_bys"] = [ JSON.stringify([payer]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one. */
 	} else if (pathname.includes ('/missed-ads')) {
-		const { observed_at_min = new Date(new Date() - 30 * 24 * 60 * 60 * 1000).toISOString(), observed_at_max } = params;
+		const { observed_at_min = new Date(new Date() - 30 * 24 * 60 * 60 * 1000).toISOString(), observed_at_max, poliprob=[DEFAULT_MIN_POLIPROB, 100] } = params;
+		searchParams["no_payer"] = [true];
 		searchParams["observed_at_min"] = [observed_at_min];
+		searchParams["poliprob"] = [JSON.stringify(poliprob)];
 		if(observed_at_max) searchParams["observed_at_min"] = [observed_at_max];
 		searchParams["order_by_poliprob_desc"] = [true];
 	} else {
