@@ -23,15 +23,17 @@ const useQuery = ( pathname ) => {
 
 	if ( pathname === '/search' ) {
 		// don't do anything special for searches.
-	}
-	else if ( pathname.includes( '/advertiser' ) ) {
+	} else if ( pathname.includes( '/advertiser' ) ) {
 		const { page_id } = params;
-		console.log("params", page_id);
 		searchParams["page_ids"] = [ JSON.stringify([page_id]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one.*/
-	}
-	else if ( pathname.includes( '/payer' ) ) {
+	} else if ( pathname.includes( '/payer' ) ) {
 		const { payer } = params;
 		searchParams["paid_for_bys"] = [ JSON.stringify([payer]) ]; /* for now, advertisers can be multiple (hence JSON array) and paid for by takes only one. */
+	} else if (pathname.includes ('/missed-ads')) {
+		const { observed_at_min = new Date(new Date() - 30 * 24 * 60 * 60 * 1000).toISOString(), observed_at_max } = params;
+		searchParams["observed_at_min"] = [observed_at_min];
+		if(observed_at_max) searchParams["observed_at_min"] = [observed_at_max];
+		searchParams["order_by_poliprob_desc"] = [true];
 	} else {
 		// do nothing.
 	}

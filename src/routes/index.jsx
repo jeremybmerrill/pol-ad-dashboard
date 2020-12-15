@@ -14,6 +14,7 @@ const Routes = () => (
 				<Redirect to="/search" />
 			</Route>
 			<Route path="/search" component={AdSearch} />
+			<Route path="/missed-ads" component={AdSearch} />
 			<Route path="/advertiser/:page_id" component={Advertiser} />
 			<Route path="/payer/:payer" component={Payer} /> 
 		    <Route path="/ad/:ad_id" component={AdDetail} />
