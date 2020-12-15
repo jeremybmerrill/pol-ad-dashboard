@@ -1,4 +1,5 @@
 export const DEFAULT_MIN_POLIPROB = 80; // was 70 in propub land
+export const DEFAULT_TO_SHOW_ONLY_POLITICAL = false;
 
 export const COMMON_TARGETS_GROUPED = {
 	MinAge: [
@@ -67,6 +68,8 @@ export const COMMON_TARGETS_GROUPED = {
 		["INTERESTS", 'Barack Obama'],
 		["INTERESTS", 'Bernie Sanders'],
 		["INTERESTS", 'Donald Trump'],
+		["INTERESTS", 'Joe Biden'],
+		["INTERESTS", 'Kamala Harris'],		
 		["INTERESTS", 'Planned Parenthood'],
 		["INTERESTS", 'Politics and social issues'],
 		["INTERESTS", 'Politics'],

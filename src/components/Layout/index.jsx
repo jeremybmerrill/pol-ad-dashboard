@@ -13,7 +13,7 @@ import classnames from 'classnames/bind';
 import Search from 'components/Search';
 import styles from './Layout.module.css';
 import { Link } from 'react-router-dom';
-import { DEFAULT_MIN_POLIPROB } from '../constants'
+import { DEFAULT_MIN_POLIPROB, DEFAULT_TO_SHOW_ONLY_POLITICAL } from '../constants'
 
 const cx = classnames.bind( styles );
 
@@ -73,7 +73,7 @@ const Layout = ( {
 			/> */}	
 	 		<Checkbox
 				label="Show all ads, regardless of political classification"
-				checked={JSON.parse((new URLSearchParams(search)).get("poliprob") || "[0]")[0] != DEFAULT_MIN_POLIPROB }
+				checked={ (new URLSearchParams(search)).get("poliprob") ? JSON.parse((new URLSearchParams(search)).get("poliprob"))[0] != DEFAULT_MIN_POLIPROB : !DEFAULT_TO_SHOW_ONLY_POLITICAL }
 				onClick={(e, data) => setParam( 'poliprob', JSON.stringify([data.checked ? 0 : DEFAULT_MIN_POLIPROB, 100] )) }
 				className={cx('checkbox')}
 			/>			
