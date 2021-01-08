@@ -57,7 +57,7 @@ const subcategoryJsonToSubcategories = (waist_ui_type, subcategory_json) => {
     case 'COLLABORATIVE_AD':               return [subcategory_json.merchant_name];
     case 'COLLABORATIVE_ADS_STORE_SALES':  return [subcategory_json.merchant_name];
     case 'COLLABORATIVE_ADS_STORE_VISITS': return [subcategory_json.merchant_name];
-    default: return [];
+    default: return [null];
   }
 }
 
@@ -143,13 +143,13 @@ export const targetingLineToButtons = (waist_ui_type, subcategory_json) => {
       const minage = subcategoryJsonToSubcategories("MinAge", subcategory_json).map((filter_segment) => ({filter_target: "MinAge", filter_segment: filter_segment, ...getTargetingNicenames("MinAge", filter_segment)}))
       const maxage = subcategoryJsonToSubcategories("MaxAge", subcategory_json).map((filter_segment) => ({filter_target: "MaxAge", filter_segment: filter_segment, ...getTargetingNicenames("MaxAge", filter_segment)}))
       return gender.concat(minage).concat(maxage)
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_PAGE':
     case 'BCT':
     case 'INTERESTS':
     case 'RELATIONSHIP_STATUS':
     case 'LOCATION':
     case 'WORK_EMPLOYERS':
     case 'WORK_JOB_TITLES':
-    case 'CUSTOM_AUDIENCES_ENGAGEMENT_PAGE':
     case 'CUSTOM_AUDIENCES_ENGAGEMENT_VIDEO':
     case 'CUSTOM_AUDIENCES_ENGAGEMENT_IG':
     case 'CUSTOM_AUDIENCES_WEBSITE':
