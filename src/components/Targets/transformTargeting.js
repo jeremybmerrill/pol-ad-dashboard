@@ -40,16 +40,16 @@ const subcategoryJsonToSubcategories = (waist_ui_type, subcategory_json) => {
     case 'CUSTOM_AUDIENCES_DATAFILE':      return [subcategory_json["ca_owner_name"]];
     case "Match Key":                      return [subcategory_json["match_keys"]];
     case 'INTERESTS':                      return subcategory_json.map((interest) => interest.name);
-    case 'RELATIONSHIP_STATUS':            return [subcategory_json.relationship_status];
+    case 'RELATIONSHIP_STATUS':            return [subcategory_json.name];
     case 'LOCATION':                       return [subcategory_json.location_name];
     case 'MinAge':                         return [subcategory_json["age_min"] + 12];
     case 'MaxAge':                         return [subcategory_json["age_max"] + 12];
     case 'Gender':                         return [GENDER_CROSSWALK[subcategory_json["gender"]]];
-    case 'WORK_EMPLOYERS':                 return [subcategory_json.employer_name];
-    case 'WORK_JOB_TITLES':                return [subcategory_json.job_title];
+    case 'WORK_EMPLOYERS':                 return [subcategory_json.name];
+    case 'WORK_JOB_TITLES':                return [subcategory_json.name];
     case 'BCT':                            return [subcategory_json.name];
     case 'ED_STATUS':                      return [EDUCATION_STATUSES[subcategory_json.edu_status] || subcategory_json.edu_status];
-    case 'EDU_SCHOOLS':                    return subcategory_json.school_ids;
+    case 'EDU_SCHOOLS':                    return subcategory_json ? subcategory_json : [null];
     case 'LOCALE':                         return subcategory_json.locales.replace("{", "").replace("}", "").split(",")
     case 'ACTIONABLE_INSIGHTS':            return [subcategory_json.description];
     case 'FRIENDS_OF_CONNECTION':          return [subcategory_json.name];
@@ -57,7 +57,22 @@ const subcategoryJsonToSubcategories = (waist_ui_type, subcategory_json) => {
     case 'COLLABORATIVE_AD':               return [subcategory_json.merchant_name];
     case 'COLLABORATIVE_ADS_STORE_SALES':  return [subcategory_json.merchant_name];
     case 'COLLABORATIVE_ADS_STORE_VISITS': return [subcategory_json.merchant_name];
-    default: return [null];
+    case 'CUSTOM_AUDIENCES_LOOKALIKE':           return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_PAGE':     return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_VIDEO':    return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_IG':       return [null];
+    case 'CUSTOM_AUDIENCES_WEBSITE':             return [null];
+    case 'CUSTOM_AUDIENCES_MOBILE_APP':          return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_EVENT':    return [null];
+    case 'CUSTOM_AUDIENCES_OFFLINE':             return [null];
+    case 'CUSTOM_AUDIENCES_STORE_VISITS':        return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_CANVAS':   return [null];
+    case 'CUSTOM_AUDIENCES_ENGAGEMENT_LEAD_GEN': return [null];
+    case 'CUSTOM_AUDIENCES_LOOKALIKE':           return [null];
+    case 'DYNAMIC_RULE':                         return [null];
+
+    default: 
+      return [null];
   }
 }
 
@@ -170,7 +185,9 @@ export const targetingLineToButtons = (waist_ui_type, subcategory_json) => {
     case 'COLLABORATIVE_AD':
     case 'COLLABORATIVE_ADS_STORE_SALES':
     case 'COLLABORATIVE_ADS_STORE_VISITS':
-      return subcategoryJsonToSubcategories(waist_ui_type, subcategory_json).map((filter_segment) => ({filter_target: waist_ui_type, filter_segment: filter_segment, ...getTargetingNicenames(waist_ui_type, filter_segment)}))
+      let subcategories = subcategoryJsonToSubcategories(waist_ui_type, subcategory_json)
+      if (!subcategories){ console.warn("null subcategories", waist_ui_type, subcategory_json)};
+      return subcategories.map((filter_segment) => ({filter_target: waist_ui_type, filter_segment: filter_segment, ...getTargetingNicenames(waist_ui_type, filter_segment)}))
     default:
       return [];
   }
