@@ -50,7 +50,7 @@ const subcategoryJsonToSubcategories = (waist_ui_type, subcategory_json) => {
     case 'BCT':                            return [subcategory_json.name];
     case 'ED_STATUS':                      return [EDUCATION_STATUSES[subcategory_json.edu_status] || subcategory_json.edu_status];
     case 'EDU_SCHOOLS':                    return subcategory_json ? subcategory_json : [null];
-    case 'LOCALE':                         return subcategory_json.locales.replace("{", "").replace("}", "").split(",")
+    case 'LOCALE':                         return subcategory_json.locales
     case 'ACTIONABLE_INSIGHTS':            return [subcategory_json.description];
     case 'FRIENDS_OF_CONNECTION':          return [subcategory_json.name];
     case 'CONNECTION':                     return [subcategory_json.name];
