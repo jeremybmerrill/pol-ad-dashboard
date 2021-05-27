@@ -6,6 +6,7 @@ import Advertiser from 'components/Advertiser';
 import Payer from 'components/Payer';
 import AdDetail from 'components/AdDetail';
 import Pivot from 'components/Pivot';
+import LoginForm from 'components/Auth/Login';
 
 const Routes = () => (
 	<Fragment>
@@ -13,6 +14,7 @@ const Routes = () => (
 			<Route exact path="/">
 				<Redirect to="/search" />
 			</Route>
+			<Route path="/login" component={LoginForm} />
 			<Route path="/search" component={AdSearch} />
 			<Route path="/missed-ads" component={AdSearch} />
 			<Route path="/advertiser/:page_id" component={Advertiser} />

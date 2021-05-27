@@ -1,8 +1,8 @@
 import React from 'react';
-import Login from 'components/Login';
 import { DEFAULT_MIN_POLIPROB, DEFAULT_TO_SHOW_ONLY_POLITICAL } from '../components/constants'
 
-const API_URL = (process.env.NODE_ENV == 'development' || window.location.href.indexOf("localhost:") > -1) ? 'http://localhost:5000' : 'https://adobserver.ad-observatory.com';
+// const API_URL = (process.env.NODE_ENV == 'development' || window.location.href.indexOf("localhost:") > -1) ? 'http://localhost:5000' : 'https://adobserver.ad-observatory.com';
+const API_URL = window.location.origin;
 
 const AuthContext = React.createContext();
 
@@ -28,10 +28,14 @@ class API extends React.Component {
 			// },
 		} ).then((response) => {
 		    if (response.status == 401) {
-		      const login_url = new URL(url);
-		      login_url.pathname = "/login"
-		      window.location = login_url.toString()  ; // redirect us to the API URL, which'll send us to the login URL.
-		    }
+          // Don't redirect if already on login page.
+          if (window.location.pathname != '/login') {
+            const login_url = new URL(url);
+            login_url.pathname = "/login"
+            window.location = login_url.toString()  ; // redirect us to the API URL, which'll send us to the login URL.
+          }
+          return;
+        }
 		    return response;
 		});
 		const data = res.json();
