@@ -6,8 +6,7 @@ import { withAPI } from 'api';
 import { countryCodeCountries } from './countries'
 
 const addCountryNames = ( countryCodeCounts ) => countryCodeCounts
-	.map( ( [ countryCode, count ] ) => ( { key: countryCodeCountries[countryCode], value: countryCode, text: countryCodeCountries[countryCode], count: count } ) )
-	.sort( ( { count: countA }, { count: countB } ) => countB - countA /* desc */ );
+	.map( ( {countryCode} ) => ( { key: countryCodeCountries[countryCode], value: countryCode, text: countryCodeCountries[countryCode] } ) );
 
 const CountryFilterDropdown = ( { getCountries: getCountriesFromAPI, setParam } ) => {
 	const [ countries, setCountries ] = useState( [] );
