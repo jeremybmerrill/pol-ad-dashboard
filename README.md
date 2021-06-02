@@ -1,4 +1,8 @@
 
+# IMPORTANT:
+
+As of 6/1/2021, the login system doesn't work when run via `npm start`, instead you have to test by running `deploy.sh` (to copy this into the nyufbdashboardapi static folder) and test it there. Sucks. Sorry. 
+
 
 # Political Ad Dashboard
 
@@ -7,6 +11,7 @@ This repo is meant to house the dashboard for accessing data from Quartz's polit
 The dashboard is a React-based client-side app designed to facilitate access to the combined database. The backend/API has been created by Jeremy Merrill, and lives on a Rails app at http://dashboard.qz.ai/ .
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
 
 ## Running and deploying the app.
 
